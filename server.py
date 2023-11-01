@@ -36,7 +36,6 @@ class Function:
 
 
 def main():
-    
     functionHashmap = {
         "floor": Function.floor,
         "nroot": Function.nroot,
@@ -47,8 +46,6 @@ def main():
 
     sock = socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
     server_address = "127.0.0.1"
-    #server_address = "/tmp/json_rpc_socket.sock"
-
     try:
         os.unlink(server_address)
     except FileNotFoundError:

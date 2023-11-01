@@ -15,6 +15,7 @@ function readUserInput(question) {
         input: process.stdin,
         output: process.stdout
     });
+
     return new Promise((resolve, reject) => {
         readline.question(question, (answer) => {
             resolve(answer);
@@ -28,7 +29,7 @@ function readUserInput(question) {
 
     method = await readUserInput('Input Method --> ');
     params = await readUserInput('Input params[] --> ');
-    id = await readUserInput('Input Id? --> ');
+    id = await readUserInput('Input Id --> ');
 
     request.method = method == ""? request.method : method;
     request.params = params == ""? request.params : params;
