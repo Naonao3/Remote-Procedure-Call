@@ -4,7 +4,7 @@ const server_address = "127.0.0.1"
 const client = new net.Socket()
 
 const request = {
-    method: '',
+    method: "",
     params: "",
     id: ""
 };
