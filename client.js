@@ -4,9 +4,10 @@ const server_address = "127.0.0.1"
 const client = new net.Socket()
 
 const request = {
-    method: '',
-    params: "",
-    id: ""
+    jsonrpc:"2.0",
+    method: 'floor',
+    params: "[1,23]",
+    id: "1"
 };
 
 
@@ -69,4 +70,3 @@ function readUserInput(question) {
     });
     
 })();
-    

@@ -1,4 +1,3 @@
-
 import socket
 import os
 import json
@@ -19,7 +18,7 @@ class Function:
 
     def sort(strArr):
         return sorted(strArr)
-    
+    """
     def checkType(answer):
         if isinstance(answer,bool):
             return "bool"
@@ -33,7 +32,7 @@ class Function:
             return "list"
         else:
             return "incorrect type"
-
+    """
 
 def main():
     functionHashmap = {
@@ -43,9 +42,19 @@ def main():
         "validAnagram": Function.validAnagram,
         "sort": Function.sort
     }
-
+    """
+    paramCheckHashmap = {
+        'floor' : 'double',
+        'nroot' : '[int,int]',
+        'reverse' : 'string',
+        'validAnagram' : '[string,string]',
+        'sort' : 'string[]'
+    }
+    """
+    
     sock = socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
     server_address = "127.0.0.1"
+
     try:
         os.unlink(server_address)
     except FileNotFoundError:
@@ -56,8 +65,6 @@ def main():
     sock.bind(server_address)
 
     sock.listen(1)
-
-    connection,client_address = sock.accept()
 
     while True:
         connection,client_address = sock.accept()
@@ -74,27 +81,29 @@ def main():
                 receivedData = json.loads(data)
                 method = receivedData["method"]
                 params = receivedData["params"][1:-1].split(",")
+                #paramType = receivedData["param_types"]
+                id = receivedData["id"]
 
-                if functionHashmap[method]:
+                if method in functionHashmap:
+                    #if paramCheckHashmap[method] != str(paramType):
+                    #    sendData = "inccorect parameter"
+                    #else:
                     result = functionHashmap[method](params)
-                    resultType = Function.checkType(result)
+                    #resultType = Function.checkType(result)
+                    sendHashmap = {
+                        "results": str(result),
+                        #"resultsType": resultType,
+                        "id":id
+                    }
+                    sendData = json.dumps(sendHashmap)
+                else:
+                    sendData = "inncorrect method"
 
-                    answer = {
-                        "result":result,
-                        "result_type": resultType,
-                        "id":receivedData["id"]
-                    }
-                else:
-                    answer = {
-                        "result":"incorrect method",
-                        "result_type": "...",
-                        "id":receivedData["id"]
-                    }
-                if data:
-                    connection.sendall(json.dumps(answer).encode())
-                else:
-                    print("no data from", client_address)
-                    break
+                
+
+                connection.sendall(sendData.encode("utf-8"))
+                print("response data: {}".format(sendData))
+                
                 
                 
         finally:
