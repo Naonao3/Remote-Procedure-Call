@@ -4,10 +4,9 @@ const server_address = "127.0.0.1"
 const client = new net.Socket()
 
 const request = {
-    jsonrpc:"2.0",
-    method: 'floor',
-    params: "[1,23]",
-    id: "1"
+    method: '',
+    params: "",
+    id: ""
 };
 
 
@@ -29,7 +28,7 @@ function readUserInput(question) {
 (async function main() {
 
     method = await readUserInput('Input Method --> ');
-    params = await readUserInput('Input params[] --> ');
+    params = await readUserInput('Input params --> ');
     id = await readUserInput('Input Id --> ');
 
     request.method = method == ""? request.method : method;

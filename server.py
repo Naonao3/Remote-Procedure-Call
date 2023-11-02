@@ -1,3 +1,4 @@
+
 import socket
 import os
 import json
@@ -17,22 +18,20 @@ class Function:
         return sorted(str1) == sorted(str2)
 
     def sort(strArr):
-        return sorted(strArr)
-    """
-    def checkType(answer):
-        if isinstance(answer,bool):
-            return "bool"
-        elif isinstance(answer,int):
-            return "int"
-        elif isinstance(answer,float):
-            return "float"
-        elif isinstance(answer,str):
-            return "str"
-        elif isinstance(answer,list):
-            return "list"
+        return sorted(strArr)    
+
+    def changeType(method,params):
+        if method == "floor":
+            return float(params)
+        elif method == "nroot":
+            return int(params)
+        elif method == "reverse":
+            return str(params)
+        elif method == "validAnagram":
+            return str(params)
         else:
-            return "incorrect type"
-    """
+            return str(params)
+
 
 def main():
     functionHashmap = {
@@ -42,16 +41,7 @@ def main():
         "validAnagram": Function.validAnagram,
         "sort": Function.sort
     }
-    """
-    paramCheckHashmap = {
-        'floor' : 'double',
-        'nroot' : '[int,int]',
-        'reverse' : 'string',
-        'validAnagram' : '[string,string]',
-        'sort' : 'string[]'
-    }
-    """
-    
+
     sock = socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
     server_address = "127.0.0.1"
 
@@ -77,38 +67,54 @@ def main():
                 data_str = data.decode("utf-8")
 
                 print("Received data: {}".format(data_str))
+                
 
                 receivedData = json.loads(data)
+
+                
+
                 method = receivedData["method"]
-                params = receivedData["params"][1:-1].split(",")
-                #paramType = receivedData["param_types"]
+                params = receivedData["params"]
                 id = receivedData["id"]
 
+                """
+                print(type(params))
+                params = Function.changeType(method,params)
+                print(params)
+                print(type(params))
+                """
+
+
+                
+
                 if method in functionHashmap:
-                    #if paramCheckHashmap[method] != str(paramType):
-                    #    sendData = "inccorect parameter"
-                    #else:
+                    
                     result = functionHashmap[method](params)
-                    #resultType = Function.checkType(result)
-                    sendHashmap = {
-                        "results": str(result),
-                        #"resultsType": resultType,
+
+
+                    answer = {
+                        "results": result,
                         "id":id
                     }
-                    sendData = json.dumps(sendHashmap)
+                    
                 else:
-                    sendData = "inncorrect method"
+                    answer = {
+                        "result":result,
+                        "id":id
+                    }
+                
+                
+                if data:
+                    connection.sendall(json.dumps(answer).encode())
+                    print("answer data: {}".format(answer))
+                else:
+                    print("no data from",client_address)
+                    break          
 
-                
-
-                connection.sendall(sendData.encode("utf-8"))
-                print("response data: {}".format(sendData))
-                
-                
-                
         finally:
             print("Closing current connection")
             connection.close()
+            #break
 
 
 if __name__ == "__main__":
