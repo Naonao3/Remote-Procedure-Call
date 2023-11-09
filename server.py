@@ -44,6 +44,7 @@ def main():
 
     sock = socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
     server_address = "127.0.0.1"
+    #server_address = "/socket_file"
 
     try:
         os.unlink(server_address)
@@ -57,12 +58,14 @@ def main():
     sock.listen(1)
 
     while True:
-        connection,client_address = sock.accept()
+        #connection,client_address = sock.accept()
 
         try:
-            print("connection from",client_address)
-
+            
             while True:
+                connection,client_address = sock.accept()
+                print("connection from",client_address)
+
                 data = connection.recv(1024)
                 data_str = data.decode("utf-8")
 
@@ -77,12 +80,10 @@ def main():
                 params = receivedData["params"]
                 id = receivedData["id"]
 
-                """
-                print(type(params))
+            
                 params = Function.changeType(method,params)
-                print(params)
-                print(type(params))
-                """
+
+                
 
 
                 
@@ -90,7 +91,6 @@ def main():
                 if method in functionHashmap:
                     
                     result = functionHashmap[method](params)
-
 
                     answer = {
                         "results": result,

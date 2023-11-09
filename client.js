@@ -1,6 +1,8 @@
 
 const net = require("net")
 const server_address = "127.0.0.1"
+//const server_address = "/socket_file"
+
 const client = new net.Socket()
 
 const request = {
@@ -51,8 +53,9 @@ function readUserInput(question) {
         
         if (response.error) {
             console.error('Error:', response.error);
-        } else {
-            console.log(request.method, response.result);
+        }else{
+            //console.log(request.method, response.result);
+            console.log(request);
         }
         
         
