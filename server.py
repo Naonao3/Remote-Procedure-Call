@@ -56,13 +56,13 @@ def main():
 
     sock.listen(1)
 
+    
     while True:
-        #connection,client_address = sock.accept()
-
         try:
             
             while True:
                 connection,client_address = sock.accept()
+                print("--------------")
                 print("connection from",client_address)
 
                 data = connection.recv(1024)
