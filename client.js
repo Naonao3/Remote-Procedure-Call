@@ -1,7 +1,6 @@
 
 const net = require("net")
-const server_address = "127.0.0.1"
-//const server_address = "/socket_file"
+const server_address = "/tmp/json_rpc_socket.sock"
 
 const client = new net.Socket()
 
@@ -54,8 +53,7 @@ function readUserInput(question) {
         if (response.error) {
             console.error('Error:', response.error);
         }else{
-            //console.log(request.method, response.result);
-            console.log(request);
+            console.log(response);
         }
         
         

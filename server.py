@@ -43,8 +43,7 @@ def main():
     }
 
     sock = socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
-    server_address = "127.0.0.1"
-    #server_address = "/socket_file"
+    server_address = "/tmp/json_rpc_socket.sock"
 
     try:
         os.unlink(server_address)
@@ -103,18 +102,19 @@ def main():
                         "id":id
                     }
                 
+
                 
                 if data:
-                    connection.sendall(json.dumps(answer).encode())
+                    connection.send(json.dumps(answer).encode())
                     print("answer data: {}".format(answer))
                 else:
                     print("no data from",client_address)
-                    break          
+                    break         
+                            
 
         finally:
             print("Closing current connection")
             connection.close()
-            #break
 
 
 if __name__ == "__main__":
